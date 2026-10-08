@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import { getArticles } from '../../lib/content';
+import { breadcrumbSchema } from '../../lib/seo';
+import { formatDate, readingMinutes, toFa } from '../../lib/format';
+const articles = await getArticles();
+---
+<BaseLayout title="مقالات و راهنماها" description="راهنمای جواز کسب، مدارک و مراحل ثبت و پیگیری در بندرعباس و هرمزگان." jsonLd={[breadcrumbSchema([{ name: 'خانه', path: '/' }, { name: 'مقالات', path: '/articles/' }])]}>
+  <div class="page-head">
+    <div class="container">
+      <Breadcrumbs items={[{ name: 'مقالات' }]} />
+      <h1>مقالات و راهنماها</h1>
+      <p>راهنمای مدارک، مراحل و نکات عملی برای راه‌اندازی و ساماندهی کسب‌وکار.</p>
+    </div>
+  </div>
+  <div class="container aside-layout">
+    <div>
+      {articles.length === 0 ? <p>به‌زودی مقالات تازه منتشر می‌شود.</p> : (
+        <div class="art-list">
+          {articles.map((a) => (
+            <a class="art-item" href={`/articles/${a.id}/`}>
+              <div class="meta">
+                <span class="badge">{a.data.category}</span>
+                {a.data.draft && <span class="badge draft">پیش‌نویس</span>}
+                <span>{formatDate(a.data.publishedAt)}</span>
+                <span>{toFa(readingMinutes(a.body))} دقیقه مطالعه</span>
+              </div>
+              <h3>{a.data.title}</h3>
+              <p>{a.data.description}</p>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+    <aside class="sticky"><LeadForm compact heading="سؤال دارید؟" sub="شماره‌تان را بگذارید تا تماس بگیریم." formName="articles_index" placement="article" /></aside>
+  </div>
+</BaseLayout>

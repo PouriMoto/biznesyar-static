@@ -1,0 +1,29 @@
+---
+import { isStatic } from '../lib/leads';
+if (isStatic) return Astro.redirect('/contact/');
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="ورود و پیگیری پرونده" description="ورود به پنل بیزنس‌یار با کد پیامکی" noindex>
+  <section class="section">
+    <div class="container" style="max-width:26rem">
+      <div class="lead-card" style="box-shadow:0 12px 40px -16px rgb(15 31 46 / .3);border:1px solid var(--line)">
+        <h1 style="font-size:1.5rem">ورود به پنل</h1>
+        <p class="sub">با شماره موبایل وارد شوید تا پرونده‌تان را پیگیری کنید.</p>
+        <form id="phone-form" class="lead" novalidate>
+          <label>شماره موبایل<input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="09123456789" required /></label>
+          <button class="btn btn-primary" type="submit">دریافت کد</button>
+        </form>
+        <form id="code-form" class="lead" novalidate hidden>
+          <p class="lead-note">کد ۶ رقمی به <strong id="sent-to"></strong> پیامک شد.</p>
+          <label>کد تأیید<input name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required style="letter-spacing:.4em;text-align:center" /></label>
+          <button class="btn btn-primary" type="submit">ورود</button>
+          <button class="btn btn-ghost" type="button" id="back">تغییر شماره</button>
+        </form>
+        <div id="login-msg" class="lead-status" role="status" hidden></div>
+      </div>
+    </div>
+  </section>
+  <script>
+    import '../scripts/panel/login';
+  </script>
+</BaseLayout>

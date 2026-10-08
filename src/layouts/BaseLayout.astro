@@ -1,0 +1,74 @@
+---
+import '../styles/global.css';
+import { site } from '../config';
+import { orgSchema, websiteSchema, abs } from '../lib/seo';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ContactFab from '../components/ContactFab.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogType?: 'website' | 'article';
+  noindex?: boolean;
+  jsonLd?: (object | null)[];
+  image?: string;
+  leadHere?: boolean;
+}
+const { title, description = site.seo.defaultDescription, ogType = 'website', noindex = false, jsonLd = [], image = site.assets.og_image, leadHere = false } = Astro.props;
+const canonical = abs(Astro.url.pathname);
+const fullTitle = title ? `${title} | ${site.brand.name_fa}` : `${site.brand.name_fa} | ${site.brand.tagline}`;
+const robots = noindex || site.seo.noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large';
+const t = site.theme;
+const themeVars = `--primary:${t.primary};--accent:${t.accent};--bg:${t.bg};--text:${t.text};--radius:${t.radius}`;
+const leadHref = leadHere ? '#lead' : '/contact/#lead';
+const schemas = [orgSchema(), websiteSchema(), ...jsonLd].filter(Boolean);
+const apiBase = import.meta.env.PUBLIC_API_BASE ?? (import.meta.env.DEV ? 'http://127.0.0.1:8090' : '');
+const clientCfg = JSON.stringify({ analytics: site.analytics, api: { ...site.api, base: apiBase }, payments: site.payments, mode: (site as any).mode, leads: (site as any).leads ? { provider: (site as any).leads.provider, googleForm: (site as any).leads.googleForm } : undefined });
+---
+<!doctype html>
+<html lang="fa" dir="rtl" style={themeVars}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content={robots} />
+    <meta name="theme-color" content={t.primary} />
+    <link rel="icon" href={site.assets.favicon} type="image/svg+xml" />
+    <link rel="preload" href="/fonts/Vazirmatn-Variable.woff2" as="font" type="font/woff2" crossorigin />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:locale" content="fa_IR" />
+    <meta property="og:site_name" content={site.brand.name_fa} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={abs(image)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    {schemas.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip" href="#main">رفتن به محتوا</a>
+    <Header leadHref={leadHref} />
+    <main id="main"><slot /></main>
+    <Footer />
+    <ContactFab leadHref={leadHref} />
+    <script type="application/json" id="bz-config" set:html={clientCfg} />
+    {site.analytics.metrica && (
+      <script is:inline define:vars={{ id: Number(site.analytics.metrica) }}>
+        window.ym = window.ym || function () { (window.ym.a = window.ym.a || []).push(arguments); };
+        window.ym.l = Date.now();
+        window.ym(id, 'init', { clickmap: true, trackLinks: true, accurateTrackBounce: true });
+        (function () {
+          var load = function () { var s = document.createElement('script'); s.async = 1; s.src = 'https://mc.yandex.ru/metrika/tag.js'; document.head.appendChild(s); };
+          if (document.readyState === 'complete') setTimeout(load, 0); else addEventListener('load', function () { setTimeout(load, 0); });
+        })();
+      </script>
+    )}
+    <script>
+      import '../scripts/track';
+    </script>
+  </body>
+</html>

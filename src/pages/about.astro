@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import LeadForm from '../components/LeadForm.astro';
+import home from '../data/home.json';
+---
+<BaseLayout title="درباره ما" description="با بیزنس‌یار آشنا شوید؛ دستیار کسب‌وکار در بندرعباس و هرمزگان." leadHere>
+  <div class="page-head">
+    <div class="container">
+      <Breadcrumbs items={[{ name: 'درباره ما' }]} />
+      <h1>{home.about.title}</h1>
+    </div>
+  </div>
+  <div class="container aside-layout">
+    <div class="prose">{home.about.paragraphs.map((p) => <p>{p}</p>)}</div>
+    <aside class="sticky"><LeadForm compact heading="مشاوره رایگان" formName="about" placement="contact" /></aside>
+  </div>
+</BaseLayout>

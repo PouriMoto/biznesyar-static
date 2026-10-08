@@ -1,0 +1,135 @@
+{
+  "brand": {
+    "name_fa": "بیزنس‌یار",
+    "name_en": "Bizyaar",
+    "tagline": "دستیار کسب‌وکار شما در بندرعباس و هرمزگان",
+    "url": "https://bizyaar.ir",
+    "showNameBesideLogo": true
+  },
+  "theme": {
+    "primary": "#0E6B78",
+    "accent": "#E0A100",
+    "bg": "#FFFFFF",
+    "text": "#0F1F2E",
+    "radius": "10px"
+  },
+  "assets": {
+    "logo": "/brand/logo.svg",
+    "logo_light": "/brand/logo-light.svg",
+    "favicon": "/brand/favicon.svg",
+    "og_image": "/brand/og.png"
+  },
+  "contact": {
+    "phone": "",
+    "whatsapp": "",
+    "bale": "",
+    "rubika": "",
+    "instagram": "",
+    "address": "بندرعباس، آزادشهر، خیابان سپاه، پشت پمپ بنزین پامرو، روبروی زمین ورزشی شهسوار، جنب املاک هواسی، بیزنس‌یار (پرچم آبی)",
+    "hours": "۹ تا ۲۱",
+    "phones": [
+      {
+        "number": "07691095331",
+        "label": "تلفن دفتر"
+      },
+      {
+        "number": "09999631531",
+        "label": "موبایل"
+      }
+    ],
+    "addressShort": "آزادشهر بندرعباس، خیابان سپاه",
+    "mapUrl": ""
+  },
+  "cta": {
+    "order": [
+      "call",
+      "whatsapp",
+      "bale",
+      "rubika",
+      "instagram"
+    ],
+    "whatsappText": "سلام، برای دریافت مشاوره درباره جواز کسب پیام می‌دهم."
+  },
+  "services": [
+    {
+      "slug": "business-license",
+      "enabled": true
+    },
+    {
+      "slug": "company-registration",
+      "enabled": true
+    },
+    {
+      "slug": "trade-card",
+      "enabled": true
+    },
+    {
+      "slug": "tax",
+      "enabled": true
+    }
+  ],
+  "features": {
+    "otp": false,
+    "panel": false,
+    "quiz": false
+  },
+  "analytics": {
+    "metrica": "",
+    "sink": "none"
+  },
+  "api": {
+    "leads": "/api/collections/leads/records",
+    "events": "/api/collections/events/records",
+    "base": ""
+  },
+  "seo": {
+    "noindex": false,
+    "defaultDescription": "بیزنس‌یار؛ مشاوره و پیگیری جواز کسب، ثبت شرکت، کارت بازرگانی و امور مالیاتی در بندرعباس، قشم، کیش و سراسر هرمزگان."
+  },
+  "legal": {
+    "disclaimer": "بیزنس‌یار مجموعه‌ای خصوصی برای مشاوره و پیگیری امور اداری کسب‌وکار است و وابسته به نهادهای دولتی نیست. هزینه‌ها و مدارک رسمی بر اساس مقررات مراجع مربوطه است."
+  },
+  "payments": {
+    "mode": "manual"
+  },
+  "magnets": [
+    {
+      "id": "license-docs",
+      "title": "فهرست مدارک جواز کسب (PDF)",
+      "text": "فهرست کامل مدارک، اطلاعات لازم و پیش‌نیازها را رایگان دریافت کنید. شماره موبایل‌تان را بنویسید تا لینک دانلود باز شود.",
+      "file": "/downloads/business-license-documents.pdf",
+      "services": [
+        "business-license"
+      ]
+    }
+  ],
+  "upload": {
+    "maxMB": 5
+  },
+  "mode": "static",
+  "leads": {
+    "enabled": true,
+    "provider": "google-form",
+    "googleForm": {
+      "action": "https://docs.google.com/forms/d/e/FORM_ID_HERE/formResponse",
+      "fields": {
+        "name": "entry.0000000001",
+        "phone": "entry.0000000002",
+        "service": "entry.0000000003",
+        "region": "entry.0000000004",
+        "message": "entry.0000000005",
+        "page": "entry.0000000006",
+        "source": "entry.0000000007",
+        "utm": "entry.0000000008"
+      }
+    },
+    "placements": {
+      "hero": true,
+      "service": true,
+      "area": true,
+      "article": true,
+      "contact": true,
+      "magnet": true
+    }
+  }
+}

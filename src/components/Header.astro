@@ -1,0 +1,36 @@
+---
+import { site } from '../config';
+import Icon from './Icon.astro';
+import { isStatic } from '../lib/leads';
+const nav = [
+  { label: 'خدمات', href: '/#services' },
+  { label: 'مناطق', href: '/#areas' },
+  { label: 'مقالات', href: '/articles/' },
+  { label: 'درباره ما', href: '/about/' },
+  { label: 'تماس', href: '/contact/' }
+];
+const path = Astro.url.pathname;
+const { leadHref = '/contact/#lead' } = Astro.props;
+---
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="/" aria-label={site.brand.name_fa}>
+      <img src={site.assets.logo} width="36" height="36" alt="" />
+      {site.brand.showNameBesideLogo && <span>{site.brand.name_fa}</span>}
+    </a>
+    <nav class="nav-desktop" aria-label="منوی اصلی">
+      {nav.map((n) => <a href={n.href} aria-current={path === n.href ? 'page' : undefined}>{n.label}</a>)}
+    </nav>
+    <div class="header-actions">
+      {!isStatic && <a class="btn btn-ghost nav-login" href="/login/" data-track="cta_click" data-label="header_login">ورود / پیگیری پرونده</a>}
+      <a class="btn btn-primary header-cta" href={leadHref} data-track="cta_click" data-label="header">مشاوره رایگان</a>
+      {!isStatic && <a class="btn btn-ghost login-mobile" href="/login/" data-track="cta_click" data-label="header_login_m">ورود / پیگیری</a>}
+    </div>
+    <details class="menu">
+      <summary aria-label="باز کردن منو"><Icon name="menu" /></summary>
+      <nav aria-label="منوی موبایل">
+        {nav.map((n) => <a href={n.href}>{n.label}</a>)}
+      </nav>
+    </details>
+  </div>
+</header>

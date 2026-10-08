@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Icon from '../components/Icon.astro';
+import LeadForm from '../components/LeadForm.astro';
+import { site } from '../config';
+import { channels } from '../lib/links';
+const ch = channels();
+---
+<BaseLayout title="تماس با ما" description="برای مشاوره رایگان درباره جواز کسب و امور اداری کسب‌وکار با بیزنس‌یار تماس بگیرید یا پیام بدهید." leadHere>
+  <div class="page-head">
+    <div class="container">
+      <Breadcrumbs items={[{ name: 'تماس' }]} />
+      <h1>تماس با ما</h1>
+      <p>فرم را پر کنید یا از راه‌های زیر پیام بدهید.</p>
+    </div>
+  </div>
+  <div class="container aside-layout">
+    <div>
+      {ch.length > 0 && (
+        <section class="block">
+          <h2>راه‌های ارتباطی</h2>
+          <div class="rows">
+            {ch.map((c) => (
+              <a class="row-item" href={c.href} data-track="cta_click" data-label={`contact_${c.key}`} target={c.external ? '_blank' : undefined} rel={c.external ? 'noopener' : undefined}>
+                <span class="ico"><Icon name={c.icon} /></span>
+                <span><h3>{c.label}</h3></span>
+                <Icon name="arrow-left" class="go" />
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+      <section class="block">
+        {site.contact.hours && <p><strong>ساعات پاسخ‌گویی:</strong> {site.contact.hours}</p>}
+        {site.contact.address && <p><strong>نشانی:</strong> {site.contact.address}</p>}
+      </section>
+    </div>
+    <aside class="sticky"><LeadForm heading="درخواست مشاوره رایگان" formName="contact" placement="contact" /></aside>
+  </div>
+</BaseLayout>

@@ -1,0 +1,16 @@
+---
+import Icon from './Icon.astro';
+interface Props { items: { q: string; a: string }[]; title?: string }
+const { items, title = 'پرسش‌های متداول' } = Astro.props;
+---
+{items.length > 0 && (
+  <section class="faq" aria-label={title}>
+    <h2>{title}</h2>
+    {items.map((f) => (
+      <details>
+        <summary>{f.q}<Icon name="chevron-down" /></summary>
+        <div>{f.a}</div>
+      </details>
+    ))}
+  </section>
+)}

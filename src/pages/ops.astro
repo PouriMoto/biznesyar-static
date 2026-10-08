@@ -1,0 +1,17 @@
+---
+import { isStatic } from '../lib/leads';
+if (isStatic) return Astro.redirect('/contact/');
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="پنل مدیریت" noindex>
+  <section class="section">
+    <div class="container" style="max-width:68rem">
+      <div class="panel-bar"><div><h1 id="hello" style="margin:0;font-size:1.5rem">پنل مدیریت</h1><span id="who" class="meta"></span></div><button class="btn btn-ghost" id="logout" type="button">خروج</button></div>
+      <div class="tabs" id="tabs" role="tablist"></div>
+      <div id="app" aria-live="polite"><p>در حال بارگذاری…</p></div>
+    </div>
+  </section>
+  <script>
+    import '../scripts/panel/ops';
+  </script>
+</BaseLayout>

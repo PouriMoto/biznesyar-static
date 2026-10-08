@@ -1,0 +1,85 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Icon from '../../components/Icon.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import LeadMagnet from '../../components/LeadMagnet.astro';
+import Faq from '../../components/Faq.astro';
+import { enabledServices, getRegions, getArticles } from '../../lib/content';
+import { breadcrumbSchema, faqSchema, serviceSchema } from '../../lib/seo';
+import { formatDate } from '../../lib/format';
+import { leadsOn } from '../../lib/leads';
+
+export function getStaticPaths() {
+  return enabledServices().filter((s: any) => s.description).map((s) => ({ params: { slug: s.slug }, props: { s } }));
+}
+const svc: any = Astro.props.s;
+const regions = getRegions();
+const arts = (await getArticles()).filter((a) => a.data.service === svc.slug).slice(0, 4);
+const path = `/services/${svc.slug}/`;
+---
+<BaseLayout
+  title={`${svc.title} در بندرعباس و هرمزگان`}
+  description={svc.short}
+  jsonLd={[breadcrumbSchema([{ name: 'خانه', path: '/' }, { name: svc.title, path }]), serviceSchema(svc, regions.map((r) => r.name)), faqSchema(svc.faq ?? [])]}
+  leadHere
+>
+  <div class="page-head">
+    <div class="container">
+      <Breadcrumbs items={[{ name: svc.title }]} />
+      <h1>{svc.title}</h1>
+      <p>{svc.description}</p>
+    </div>
+  </div>
+  <div class="container aside-layout">
+    <div>
+      {svc.forWho && (
+        <section class="block">
+          <h2>این خدمت برای چه کسانی است؟</h2>
+          <ul class="check">{svc.forWho.map((w: string) => <li><Icon name="check" /><span>{w}</span></li>)}</ul>
+        </section>
+      )}
+      {svc.steps && (
+        <section class="block">
+          <h2>مراحل کار</h2>
+          <ol class="log">
+            {svc.steps.map((st: { title: string; text: string }, i: number) => (
+              <li><span class="dot">{(i + 1).toLocaleString('fa-IR')}</span><h3>{st.title}</h3><p>{st.text}</p></li>
+            ))}
+          </ol>
+        </section>
+      )}
+      {svc.documents && (
+        <section class="block">
+          <h2>مدارک معمول</h2>
+          <ul class="check">
+            {svc.documents.map((d: { title: string; note: string }) => <li><Icon name="file-text" /><span>{d.title}{d.note && <small>{d.note}</small>}</span></li>)}
+          </ul>
+          {svc.documentsNote && <p class="note">{svc.documentsNote}</p>}
+        </section>
+      )}
+      <section class="block">
+        <h2>{svc.title} در هر منطقه</h2>
+        <div class="areas">
+          {regions.map((r) => <a class="area" href={`/areas/${r.slug}/`}>{r.name}<small>{r.kind}</small></a>)}
+        </div>
+      </section>
+      {leadsOn('magnet') && <LeadMagnet service={svc.slug ?? "business-license"} />}
+      <div class="block"><Faq items={svc.faq ?? []} /></div>
+      {arts.length > 0 && (
+        <section class="block">
+          <h2>مقالات مرتبط</h2>
+          <div class="art-list">
+            {arts.map((a) => (
+              <a class="art-item" href={`/articles/${a.id}/`}>
+                <div class="meta"><span class="badge">{a.data.category}</span><span>{formatDate(a.data.publishedAt)}</span></div>
+                <h3>{a.data.title}</h3><p>{a.data.description}</p>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
+    <aside class="sticky"><LeadForm service={svc.slug} heading="مشاوره رایگان" sub={`برای ${svc.title} شماره‌تان را بگذارید.`} formName={`service_${svc.slug}`} placement="service" /></aside>
+  </div>
+</BaseLayout>

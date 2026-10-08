@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import { getRegions } from '../../lib/content';
+import { breadcrumbSchema } from '../../lib/seo';
+const regions = getRegions();
+---
+<BaseLayout title="مناطق تحت پوشش در هرمزگان" description="خدمات مشاوره و پیگیری جواز کسب و امور اداری کسب‌وکار در بندرعباس، قشم، کیش، میناب، رودان و سایر شهرهای هرمزگان." jsonLd={[breadcrumbSchema([{ name: 'خانه', path: '/' }, { name: 'مناطق', path: '/areas/' }])]} leadHere>
+  <div class="page-head"><div class="container">
+    <Breadcrumbs items={[{ name: 'مناطق' }]} />
+    <h1>مناطق تحت پوشش</h1>
+    <p>شهر یا منطقه خودتان را انتخاب کنید.</p>
+  </div></div>
+  <div class="container aside-layout">
+    <div class="areas" style="align-content:flex-start">
+      {regions.map((r) => <a class="area" href={`/areas/${r.slug}/`}>{r.name}<small>{r.kind}</small></a>)}
+    </div>
+    <aside class="sticky"><LeadForm heading="مشاوره رایگان" formName="areas_index" placement="area" /></aside>
+  </div>
+</BaseLayout>

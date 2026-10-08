@@ -1,0 +1,29 @@
+# استقرار اختیاری روی هاست/VPS ایرانی با rsync (دستی اجرا می‌شود).
+# فقط وقتی لازم است که بخواهی سایت را روی سرور خودت بگذاری، نه GitHub Pages.
+name: Deploy to SSH server
+on:
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+      - name: rsync
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+        run: |
+          install -m 600 /dev/null key
+          printf '%s\n' "$SSH_KEY" > key
+          rsync -az --delete -e "ssh -i key -p ${SSH_PORT:-22} -o StrictHostKeyChecking=accept-new" dist/ "$SSH_USER@$SSH_HOST:/var/www/bizyaar/"

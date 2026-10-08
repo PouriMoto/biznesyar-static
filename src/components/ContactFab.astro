@@ -1,0 +1,17 @@
+---
+import Icon from './Icon.astro';
+import { channels } from '../lib/links';
+const ch = channels();
+const { leadHref = '/contact/#lead' } = Astro.props;
+---
+<details class="fab">
+  <summary aria-label="راه‌های ارتباط با ما"><Icon name="phone" class="fab-open" /><Icon name="x" class="fab-close" /></summary>
+  <div class="fab-menu" role="menu">
+    {ch.map((c) => (
+      <a role="menuitem" href={c.href} data-track="cta_click" data-label={`fab_${c.key}`} target={c.external ? '_blank' : undefined} rel={c.external ? 'noopener' : undefined}>
+        <Icon name={c.icon} />{c.label}
+      </a>
+    ))}
+    <a role="menuitem" class="fab-primary" href={leadHref} data-track="cta_click" data-label="fab_form"><Icon name="file-text" />درخواست مشاوره رایگان</a>
+  </div>
+</details>

@@ -1,0 +1,46 @@
+---
+import { site } from '../config';
+import { channels, phones } from '../lib/links';
+import { isStatic } from '../lib/leads';
+import { enabledServices, getRegions } from '../lib/content';
+const social = channels().filter((c) => !c.key.startsWith('call'));
+const featured = getRegions().filter((r: any) => r.featured);
+const year = new Intl.DateTimeFormat('fa-IR-u-ca-persian', { year: 'numeric' }).format(new Date());
+const c = site.contact as any;
+---
+<footer class="site-footer">
+  <div class="container">
+    <div class="foot-grid">
+      <div class="office">
+        <div class="foot-brand"><img src={site.assets.logo_light} width="36" height="36" alt="" loading="lazy" />{site.brand.name_fa}</div>
+        {c.address && <address style="font-style:normal">{c.address}</address>}
+        <div class="phones">{phones().map((p) => <a href={p.href} data-track="cta_click" data-label={`footer_${p.number}`}>{p.display}</a>)}</div>
+        {c.hours && <span>ساعات کاری: {c.hours}</span>}
+      </div>
+      <div>
+        <h4>خدمات</h4>
+        <ul>{enabledServices().map((s) => <li><a href={`/services/${s.slug}/`}>{s.title}</a></li>)}</ul>
+      </div>
+      <div>
+        <h4>مناطق</h4>
+        <ul>
+          {featured.map((r: any) => <li><a href={`/areas/${r.slug}/`}>{r.name}</a></li>)}
+          <li><a href="/areas/">همه مناطق هرمزگان</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>پیوندها</h4>
+        <ul>
+          {social.map((s) => <li><a href={s.href} target="_blank" rel="noopener" data-track="cta_click" data-label={`footer_${s.key}`}>{s.label}</a></li>)}
+          <li><a href="/articles/">مقالات</a></li>
+          <li><a href="/contact/">تماس با ما</a></li>
+          {!isStatic && <li><a href="/login/" rel="nofollow">ورود / پیگیری پرونده</a></li>}
+        </ul>
+      </div>
+    </div>
+    <div class="legal">
+      <p>{site.legal.disclaimer}</p>
+      <p>© {year} {site.brand.name_fa}</p>
+    </div>
+  </div>
+</footer>

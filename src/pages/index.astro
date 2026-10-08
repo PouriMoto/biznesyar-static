@@ -1,0 +1,141 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import LeadForm from '../components/LeadForm.astro';
+import CaseCard from '../components/CaseCard.astro';
+import Faq from '../components/Faq.astro';
+import { site } from '../config';
+import home from '../data/home.json';
+import { channels, phones } from '../lib/links';
+import { allServices, getRegions, getArticles } from '../lib/content';
+import { faqSchema } from '../lib/seo';
+import { isStatic } from '../lib/leads';
+import { formatDate } from '../lib/format';
+
+const ch = channels();
+const ph = phones();
+const office = site.contact as any;
+const services = allServices();
+const regions = getRegions();
+const latest = (await getArticles()).slice(0, 3);
+---
+<BaseLayout jsonLd={[faqSchema(home.faq)]} leadHere>
+  <section class="hero">
+    <div class="container">
+      <div>
+        <h1>{home.hero.title}</h1>
+        <p class="lead-text">{home.hero.subtitle}</p>
+        <ul class="hero-points">
+          {home.hero.points.map((p) => <li><Icon name="check" />{p}</li>)}
+        </ul>
+        {!isStatic && <div class="hero-track"><span>قبلاً درخواست داده‌اید؟</span><a class="btn" href="/login/" data-track="cta_click" data-label="hero_login">ورود و پیگیری پرونده</a></div>}
+        {ch.length > 0 && (
+          <div class="hero-channels">
+            {ch.map((c) => (
+              <a class="btn btn-ghost" href={c.href} data-track="cta_click" data-label={`hero_${c.key}`} target={c.external ? '_blank' : undefined} rel={c.external ? 'noopener' : undefined}>
+                <Icon name={c.icon} />{c.label}
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+      <LeadForm id="lead" heading="مشاوره رایگان" sub="شماره‌تان را بگذارید تا با شما تماس بگیریم." formName="hero" placement="hero" />
+    </div>
+  </section>
+
+  <section class="section" id="services">
+    <div class="container">
+      <h2>خدمات</h2>
+      <p class="lead-text">از جواز کسب شروع می‌کنیم و خدمات بعدی را به‌تدریج اضافه می‌کنیم.</p>
+      <div class="rows">
+        {services.map((s) => s.enabled ? (
+          <a class="row-item" href={`/services/${s.slug}/`}>
+            <span class="ico"><Icon name={s.icon} /></span>
+            <span><h3>{s.title}</h3><p>{s.short}</p></span>
+            <Icon name="arrow-left" class="go" />
+          </a>
+        ) : (
+          <div class="row-item soon">
+            <span class="ico"><Icon name={s.icon} /></span>
+            <span><h3>{s.title}</h3><p>{s.short}</p></span>
+            <span class="tag">به‌زودی</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-tint">
+    <div class="container split">
+      <div>
+        <h2>{home.process.title}</h2>
+        <p class="lead-text">{home.process.text}</p>
+        <ol class="log">
+          {services[0] && (services[0] as any).steps?.map((s: { title: string; text: string }, i: number) => (
+            <li><span class="dot">{(i + 1).toLocaleString('fa-IR')}</span><h3>{s.title}</h3><p>{s.text}</p></li>
+          ))}
+        </ol>
+      </div>
+      <CaseCard />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container why">
+      {home.why.map((w) => (
+        <div><div class="ico"><Icon name={w.icon} /></div><h3>{w.title}</h3><p>{w.text}</p></div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section section-tint" id="areas">
+    <div class="container">
+      <h2>مناطق تحت پوشش</h2>
+      <p class="lead-text">بندرعباس، مناطق آزاد قشم و کیش و شهرهای دیگر هرمزگان.</p>
+      <div class="areas">
+        {regions.map((r) => <a class="area" href={`/areas/${r.slug}/`}>{r.name}<small>{r.kind}</small></a>)}
+      </div>
+    </div>
+  </section>
+
+  {latest.length > 0 && (
+    <section class="section">
+      <div class="container">
+        <h2>تازه‌ترین مقالات</h2>
+        <div class="art-list">
+          {latest.map((a) => (
+            <a class="art-item" href={`/articles/${a.id}/`}>
+              <div class="meta"><span class="badge">{a.data.category}</span><span>{formatDate(a.data.publishedAt)}</span></div>
+              <h3>{a.data.title}</h3>
+              <p>{a.data.description}</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section">
+    <div class="container split">
+      <div class="office">
+        <h2>دفتر مرکزی</h2>
+        <address style="font-style:normal">{office.address}</address>
+        <div class="phones">{ph.map((p) => <a href={p.href} data-track="cta_click" data-label={`office_${p.number}`}>{p.display}</a>)}</div>
+        {office.hours && <span>ساعات کاری: {office.hours}</span>}
+      </div>
+      <div></div>
+    </div>
+  </section>
+
+  <section class="section section-tint">
+    <div class="container" style="max-width:820px"><Faq items={home.faq} /></div>
+  </section>
+
+  <section class="section band">
+    <div class="container center">
+      <h2>{home.cta.title}</h2>
+      <p class="lead-text" style="margin-inline:auto">{home.cta.text}</p>
+      <a class="btn btn-ghost" href="#lead" data-track="cta_click" data-label="band">ثبت درخواست مشاوره رایگان</a>
+    </div>
+  </section>
+</BaseLayout>

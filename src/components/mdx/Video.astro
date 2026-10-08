@@ -1,0 +1,18 @@
+---
+import { abs } from '../../lib/seo';
+interface Props { src: string; poster?: any; title: string; description: string; duration?: string; uploadDate?: string; captions?: string }
+const { src, poster, title, description, duration, uploadDate, captions } = Astro.props;
+const posterUrl = typeof poster === 'string' ? poster : poster?.src;
+const ld = {
+  '@context': 'https://schema.org', '@type': 'VideoObject', name: title, description,
+  ...(posterUrl ? { thumbnailUrl: abs(posterUrl) } : {}), ...(uploadDate ? { uploadDate } : {}), ...(duration ? { duration } : {}), contentUrl: abs(src)
+};
+---
+<figure class="figure video">
+  <video controls preload="none" playsinline poster={posterUrl} aria-label={title}>
+    <source src={src} type={src.endsWith('.webm') ? 'video/webm' : 'video/mp4'} />
+    {captions && <track kind="subtitles" srclang="fa" label="فارسی" src={captions} default />}
+  </video>
+  <figcaption>{title}</figcaption>
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+</figure>

@@ -1,0 +1,19 @@
+---
+import Icon from './Icon.astro';
+import home from '../data/home.json';
+const c = home.caseCard;
+---
+<div class="case" role="img" aria-label="نمونه پیگیری مرحله‌به‌مرحله یک پرونده">
+  <div class="case-head">
+    <div><strong>{c.subtitle}</strong><small>{c.title}</small></div>
+    <span class="stamp">در حال پیگیری</span>
+  </div>
+  <ol class="case-steps">
+    {c.steps.map((s, i) => (
+      <li class={i < c.done ? 'done' : i === c.done ? 'now' : ''}>
+        <span class="box"><Icon name="check" /></span>
+        <span><strong>{s.title}</strong>{s.note && <small>{s.note}</small>}</span>
+      </li>
+    ))}
+  </ol>
+</div>

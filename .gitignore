@@ -1,0 +1,48 @@
+
+# ==========================================
+# BizYaar - Git Ignore
+# ==========================================
+
+# Dependencies
+node_modules/
+
+# Astro
+.astro/
+dist/
+
+# Environment / Secrets
+.env
+.env.*
+!.env.example
+
+# PocketBase - LOCAL DATA ONLY
+# Contains database, users, cases, uploaded files, etc.
+pb_data/
+
+# Local credentials / development notes
+LOCAL-DEV-NOTES.md
+*.local.md
+*.local.txt
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor / IDE
+.vscode/
+.idea/
+
+# Test / Coverage
+coverage/
+
+# Runtime / cache
+.cache/

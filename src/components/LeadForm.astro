@@ -1,0 +1,69 @@
+---
+import Icon from './Icon.astro';
+import { channels } from '../lib/links';
+import { enabledServices, getRegions } from '../lib/content';
+import { leadsOn, isStatic } from '../lib/leads';
+
+interface Props { id?: string; heading?: string; sub?: string; service?: string; region?: string; compact?: boolean; formName?: string; placement?: 'hero' | 'service' | 'area' | 'article' | 'contact' }
+const { id = 'lead', heading = 'مشاوره رایگان', sub = 'شماره‌تان را بگذارید تا با شما تماس بگیریم.', service = '', region = '', compact = false, formName = 'lead', placement = 'contact' } = Astro.props;
+const services = enabledServices();
+const regions = getRegions();
+const ch = channels();
+const on = leadsOn(placement);
+---
+{!on ? (
+  <div class="lead-card" id={id}>
+    <h2>{heading}</h2>
+    <p class="sub">برای مشاوره رایگان از راه‌های زیر با ما در تماس باشید.</p>
+    <div class="chips" style="justify-content:flex-start">
+      {ch.map((c) => <a class="chip" href={c.href} data-track="cta_click" data-label={`nolead_${c.key}`} target={c.external ? '_blank' : undefined} rel={c.external ? 'noopener' : undefined}><Icon name={c.icon} />{c.label}</a>)}
+    </div>
+  </div>
+) : (
+<div class="lead-card" id={id}>
+  <h2>{heading}</h2>
+  <p class="sub">{sub}</p>
+  <form class="lead" data-lead-form data-form={formName} novalidate>
+    <div class="row pair">
+      <label>نام<input name="name" autocomplete="name" required minlength="2" /></label>
+      <label>شماره موبایل<input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="09123456789" required /></label>
+    </div>
+    <div class="row">
+      <label>خدمت مورد نیاز
+        <select name="service">
+          {services.map((s) => <option value={s.slug} selected={s.slug === service || (!service && s.slug === services[0]?.slug)}>{s.title}</option>)}
+          <option value="other">هنوز مطمئن نیستم</option>
+        </select>
+      </label>
+      {!compact && (
+        <label>شهر یا منطقه
+          <select name="region">
+            {regions.map((r) => <option value={r.slug} selected={r.slug === region}>{r.name}</option>)}
+            <option value="outside">خارج از هرمزگان</option>
+          </select>
+        </label>
+      )}
+    </div>
+    {!compact && <label>توضیح کوتاه (اختیاری)<textarea name="message" rows="2" maxlength="1000"></textarea></label>}
+    <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+    <button class="btn btn-primary" type="submit">درخواست تماس رایگان</button>
+    <p class="lead-note">با ثبت درخواست، با تماس برای مشاوره موافقت می‌کنید.</p>
+    <div class="lead-status" role="status" aria-live="polite" hidden></div>
+  </form>
+  <div class="lead-success" hidden>
+    <div class="tick"><Icon name="check" /></div>
+    <h3>درخواست شما ثبت شد</h3>
+    <p>به‌زودی با شما تماس می‌گیریم. می‌توانید همین الان مدارکتان را هم آماده کنید و روند پرونده را در پنل ببینید.</p>
+    {!isStatic && <a class="btn btn-primary continue" href="/login/" data-track="cta_click" data-label="lead_continue">ادامه و پیگیری در پنل</a>}
+    <p class="lead-note" style="margin-top:.8rem">اگر عجله دارید، از اینجا پیام بدهید:</p>
+    {ch.length > 0 && (
+      <div class="chips">
+        {ch.map((c) => <a class="chip" href={c.href} data-track="cta_click" data-label={`success_${c.key}`} target={c.external ? '_blank' : undefined} rel={c.external ? 'noopener' : undefined}><Icon name={c.icon} />{c.label}</a>)}
+      </div>
+    )}
+  </div>
+</div>
+)}
+<script>
+  import '../scripts/lead-form';
+</script>

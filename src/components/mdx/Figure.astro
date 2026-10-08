@@ -1,0 +1,12 @@
+---
+import { Image } from 'astro:assets';
+interface Props { src: any; alt: string; caption?: string; width?: number; height?: number; credit?: string }
+const { src, alt, caption, width, height, credit } = Astro.props;
+const isUrl = typeof src === 'string';
+---
+<figure class="figure">
+  {isUrl
+    ? <img src={src} alt={alt} width={width} height={height} loading="lazy" decoding="async" />
+    : <Image src={src} alt={alt} widths={[480, 800, 1200]} sizes="(min-width: 1000px) 44rem, 100vw" loading="lazy" />}
+  {(caption || credit) && <figcaption>{caption}{credit && <span class="credit"> ({credit})</span>}</figcaption>}
+</figure>
